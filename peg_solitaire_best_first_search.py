@@ -10,21 +10,14 @@ Initial State:
               [9, 9, 1, 1, 1, 9, 9],
               [9, 9, 1, 1, 1, 9, 9]])
 Goal Test: number of marbles = 1
-
-heuristic if used would be average manhattan distance
-
-initialy, just use depth first search, the probelm itself avoids depth first search issues
 '''
 import copy
-import time
 
 class State:
     def __init__(self, layoutIn, parentIn=None):
         self.layout = layoutIn
         self.parent = parentIn
-        #self.evaluation_function = calculate_average_manhattan_distance(create_locations_list(layoutIn))
-        self.evaluation_function = calculate_maximum_manhattan_distance(create_locations_list(layoutIn)) + corner_count(layoutIn) #+ 0.01*inner_count(layoutIn) #- (0.01 * calculate_chain_count(layoutIn))
-        #self.evaluation_function = calculate_maximum_manhattan_distance(create_locations_list(layoutIn)) - (0.01 * calculate_chain_count(layoutIn))
+        self.evaluation_function = calculate_maximum_manhattan_distance(create_locations_list(layoutIn)) + corner_count(layoutIn)
 
 def corner_count(layoutIn):
     locations = [[2, 0], [4, 0], [0, 2], [0, 4], [6, 2], [6, 4], [2, 6], [4, 6], [3, 0], [0, 3], [6, 3], [3, 6]]
@@ -52,10 +45,6 @@ def calculate_chain_count(layoutIn):
         for y in range(len(layoutIn[0])):
             if ((layoutIn[x][y] == 1) and (layoutIn[x+1][y] == 0) and (layoutIn[x+2][y] == 1)):
                 chain_count += 1
-    #for x in range(len(layoutIn)):
-    #    for y in range(len(layoutIn[0]) - 2):
-    #        if ((layoutIn[x][y] == 1) and (layoutIn[x][y+1] == 0) and (layoutIn[x][y+2] == 1)):
-    #            chain_count += 1
     return chain_count
 
 def create_locations_list(layoutIn):
@@ -123,22 +112,12 @@ def expand(stateIn, frontierIn, counter, visited):
 
                 if goal_test(new_state):
                     return new_state
-            
-                #print("adding new state to frontier")
-                #for row in new_state.layout:
-                #    print(row)
-                #print()
-                #print(new_state.layout)
-                #time.sleep(1)
 
                 total_sum = []
                 for row in new_state.layout:
                     total_sum.append(row.count(1))
                 num_marbles = sum(total_sum)
-                #if num_marbles < 4:
-                #    for row in new_layout:
-                #        print(row)
-                #    print(calculate_average_manhattan_distance(new_layout))
+                
                 if num_marbles not in counter:
                     counter.append(num_marbles)
                     print(num_marbles)
@@ -156,19 +135,12 @@ def expand(stateIn, frontierIn, counter, visited):
 
                 if goal_test(new_state):
                     return new_state
-            
-                #print("adding new state to frontier")
-                #print(new_state.layout)
-                #time.sleep(1)
-
                 total_sum = []
+                
                 for row in new_state.layout:
                     total_sum.append(row.count(1))
                 num_marbles = sum(total_sum)
-                #if num_marbles < 4:
-                #    for row in new_layout:
-                #        print(row)
-                #    print(calculate_average_manhattan_distance(new_layout))
+                
                 if num_marbles not in counter:
                     counter.append(num_marbles)
                     print(num_marbles)
@@ -189,19 +161,12 @@ def expand(stateIn, frontierIn, counter, visited):
 
                 if goal_test(new_state):
                     return new_state
-            
-                #print("adding new state to frontier")
-                #print(new_state.layout)
-                #time.sleep(1)
 
                 total_sum = []
                 for row in new_state.layout:
                     total_sum.append(row.count(1))
                 num_marbles = sum(total_sum)
-                #if num_marbles < 4:
-                #    for row in new_layout:
-                #        print(row)
-                #    print(calculate_average_manhattan_distance(new_layout))
+                
                 if num_marbles not in counter:
                     counter.append(num_marbles)
                     print(num_marbles)
@@ -219,19 +184,12 @@ def expand(stateIn, frontierIn, counter, visited):
 
                 if goal_test(new_state):
                     return new_state
-            
-                #print("adding new state to frontier")
-                #print(new_state.layout)
-                #time.sleep(1)
 
                 total_sum = []
                 for row in new_state.layout:
                     total_sum.append(row.count(1))
                 num_marbles = sum(total_sum)
-                #if num_marbles < 4:
-                #    for row in new_layout:
-                #        print(row)
-                #    print(calculate_average_manhattan_distance(new_layout))
+                
                 if num_marbles not in counter:
                     counter.append(num_marbles)
                     print(num_marbles)
@@ -241,15 +199,12 @@ def expand(stateIn, frontierIn, counter, visited):
                     visited.append(new_state.layout)
 
 def DFS():
-    #print("creating initial state and adding to list")
     frontier = [get_initial_state()]
     counter = []
     visited = []
     while len(frontier) > 0:
-        #print("taking last item from forntier")
         frontier.sort(reverse = True, key=lambda x: x.evaluation_function)
         state = frontier.pop()
-        #print("expanding state")
         result = expand(state, frontier, counter, visited)
         if result:
             return result
